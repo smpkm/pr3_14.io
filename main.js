@@ -1,5 +1,6 @@
-﻿// ===== Получение элементов DOM через деструктуризацию =====
-const getEl = (id) => document.getElementById(id);
+﻿//  ФУНКЦІЇ РОБОТИ З DOM + ДЕСТРУКТУРИЗАЦІЯ
+
+const $ = (id) => document.getElementById(id);
 
 const {
     progressbarCharacter,
@@ -8,15 +9,15 @@ const {
     healthEnemy,
     logs: logsBox
 } = {
-    progressbarCharacter: getEl("progressbar-character"),
-    healthCharacter: getEl("health-character"),
-    progressbarEnemy: getEl("progressbar-enemy"),
-    healthEnemy: getEl("health-enemy"),
-    logs: getEl("logs")
+    progressbarCharacter: $("progressbar-character"),
+    healthCharacter: $("health-character"),
+    progressbarEnemy: $("progressbar-enemy"),
+    healthEnemy: $("health-enemy"),
+    logs: $("logs")
 };
 
+//  ОБ’ЄКТИ ПЕРСОНАЖІВ
 
-// ===== ОБЪЕКТЫ ПЕРСОНАЖЕЙ =====
 const character = {
     name: "Pikachu",
     hp: 100,
@@ -49,10 +50,9 @@ const enemy = {
     }
 };
 
+//  ЛОГИ БОЮ
 
-// ===== ФУНКЦИЯ ЛОГА БОЯ =====
 function addLog(attacker, defender, damage, leftHP) {
-    // выбираем случайную фразу из массива logs (из файла logs.js)
     const msg = logs[Math.floor(Math.random() * logs.length)]
         .replace("[ПЕРСОНАЖ №1]", attacker.name)
         .replace("[ПЕРСОНАЖ №2]", defender.name);
@@ -60,26 +60,53 @@ function addLog(attacker, defender, damage, leftHP) {
     const row = document.createElement("div");
     row.textContent = `${msg} → Урон: ${damage} | Залишилось: ${leftHP} HP`;
 
-    // Последнее действие — сверху
     logsBox.prepend(row);
 }
 
+//  ФУНКЦІЯ АТАКИ
 
-// ===== ЕДИНАЯ ФУНКЦИЯ АТАКИ =====
 function attack(attacker, defender, min, max) {
     const damage = Math.floor(Math.random() * (max - min + 1)) + min;
-
     defender.takeDamage(damage);
-
     addLog(attacker, defender, damage, defender.hp);
 }
 
+//  ЗАМИКАННЯ ДЛЯ ПІДРАХУНКУ КЛІКІВ З ЛІМІТОМ
 
-// ===== КНОПКИ АТАК =====
-getEl("btn-kick").onclick = () => attack(character, enemy, 5, 15);
-getEl("btn-strong").onclick = () => attack(character, enemy, 20, 40);
+const createClickLimiter = (limit) => {
+    let count = 0;
 
+    return () => {
+        if (count >= limit) {
+            console.log(`Ліміт досягнуто! (${limit})`);
+            return false;
+        }
 
-// ===== Стартовая отрисовка =====
+        count++;
+        console.log(`Натискань: ${count} | Залишилось: ${limit - count}`);
+        return true;
+    };
+};
+
+//  КНОПКИ ТА ВІШАННЯ ЛІМІТІВ
+
+const btnKick = $("btn-kick");
+const btnStrong = $("btn-strong");
+
+const kickLimit = createClickLimiter(6);
+const strongLimit = createClickLimiter(6);
+
+btnKick.onclick = () => {
+    if (!kickLimit()) return;
+    attack(character, enemy, 5, 15);
+};
+
+btnStrong.onclick = () => {
+    if (!strongLimit()) return;
+    attack(character, enemy, 20, 40);
+};
+
+//  СТАРТОВА ІНІЦІАЛІЗАЦІЯ
+
 character.updateUI();
 enemy.updateUI();
