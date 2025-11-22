@@ -9,58 +9,71 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="body">
-    <header>
-        <img class="logo"
-             title="Reset Game"
-             src="./assets/Pokemon_logo.png"
-             alt="Pokemon">
-    </header>
-    <div class="playground">
-        <div class="pokemon character">
-            <span class="lvl">Lv. 1</span>
+    <div class="body">
+        <header>
+            <img class="logo"
+                 title="Reset Game"
+                 src="./assets/Pokemon_logo.png"
+                 alt="Pokemon">
+        </header>
+        <div class="playground">
+            <div class="pokemon character">
+                <span class="lvl">Lv. 1</span>
 
-            <img src="http://sify4321.000webhostapp.com/pikachu.png" class="sprite">
+                <img src="http://sify4321.000webhostapp.com/pikachu.png" class="sprite">
 
-            <div class="details">
-                <h2 class="name" id="name-character">
-                    Pikachu
-                </h2>
-                <div class="hp">
-                    <div class="bar">
-                        <div class="health" id="progressbar-character" style="width: 100%;"></div>
+                <div class="details">
+                    <h2 class="name" id="name-character">
+                        Pikachu
+                    </h2>
+                    <div class="hp">
+                        <div class="bar">
+                            <div class="health" id="progressbar-character" style="width: 100%;"></div>
+                        </div>
+                        <span class="text" id="health-character">100 / 100</span>
                     </div>
-                    <span class="text" id="health-character">100 / 100</span>
                 </div>
             </div>
-        </div>
 
-        <div class="control">
-            <button class="button" id="btn-kick">Thunder Jolt</button>
-            <button class="button" id="btn-strong" style="margin-left:10px;">Mega Thunder</button>
-        </div>
+            <div class="control">
+                <button class="button" id="btn-kick">Thunder Jolt</button>
+                <button class="button" id="btn-strong" style="margin-left:10px;">Mega Thunder</button>
+            </div>
 
-        <div class="pokemon enemy">
-            <span class="lvl">Lv. 1</span>
+            <div class="pokemon enemy">
+                <span class="lvl">Lv. 1</span>
 
-            <img src="http://sify4321.000webhostapp.com/charmander.png" class="sprite">
+                <img src="http://sify4321.000webhostapp.com/charmander.png" class="sprite">
 
-            <div class="details">
-                <h2 class="name" id="name-enemy">
-                    Charmander
-                </h2>
-                <div class="hp">
-                    <div class="bar">
-                        <div class="health" id="progressbar-enemy" style="width: 100%;"></div>
+                <div class="details">
+                    <h2 class="name" id="name-enemy">
+                        Charmander
+                    </h2>
+                    <div class="hp">
+                        <div class="bar">
+                            <div class="health" id="progressbar-enemy" style="width: 100%;"></div>
+                        </div>
+                        <span class="text" id="health-enemy">100 / 100</span>
                     </div>
-                    <span class="text" id="health-enemy">100 / 100</span>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="catch_screen"></div>
+    <div class="catch_screen"></div>
 
-<script src="main.js"></script>
+    <div id="logs" style="
+    width: 90%;
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 10px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 10px;
+    text-align: left;
+    font-family: Arial;
+"></div>
+
+
+    <script src="logs.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>

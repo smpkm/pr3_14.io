@@ -1,78 +1,85 @@
-// ===== ��'���� �������Ʋ� =====
+﻿// ===== Получение элементов DOM через деструктуризацию =====
+const getEl = (id) => document.getElementById(id);
 
-const player1 = {
+const {
+    progressbarCharacter,
+    healthCharacter,
+    progressbarEnemy,
+    healthEnemy,
+    logs: logsBox
+} = {
+    progressbarCharacter: getEl("progressbar-character"),
+    healthCharacter: getEl("health-character"),
+    progressbarEnemy: getEl("progressbar-enemy"),
+    healthEnemy: getEl("health-enemy"),
+    logs: getEl("logs")
+};
+
+
+// ===== ОБЪЕКТЫ ПЕРСОНАЖЕЙ =====
+const character = {
     name: "Pikachu",
     hp: 100,
 
-    takeDamage(dmg) {
-        this.hp = Math.max(0, this.hp - dmg);
-        this.updateUI();
-    },
-
     updateUI() {
-        const bar = document.getElementById("progressbar-character");
-        const text = document.getElementById("health-character");
-
-        bar.style.width = this.hp + "%";
-        text.textContent = `${this.hp} / 100`;
-
-        this.updateColor(bar);
+        const { hp } = this;
+        progressbarCharacter.style.width = hp + "%";
+        healthCharacter.textContent = `${hp} / 100`;
     },
 
-    updateColor(bar) {
-        bar.classList.remove("low", "critical");
-        if (this.hp <= 30) bar.classList.add("critical");
-        else if (this.hp <= 60) bar.classList.add("low");
+    takeDamage(amount) {
+        this.hp = Math.max(0, this.hp - amount);
+        this.updateUI();
     }
 };
 
-const player2 = {
+const enemy = {
     name: "Charmander",
     hp: 100,
 
-    takeDamage(dmg) {
-        this.hp = Math.max(0, this.hp - dmg);
-        this.updateUI();
-    },
-
     updateUI() {
-        const bar = document.getElementById("progressbar-enemy");
-        const text = document.getElementById("health-enemy");
-
-        bar.style.width = this.hp + "%";
-        text.textContent = `${this.hp} / 100`;
-
-        this.updateColor(bar);
+        const { hp } = this;
+        progressbarEnemy.style.width = hp + "%";
+        healthEnemy.textContent = `${hp} / 100`;
     },
 
-    updateColor(bar) {
-        bar.classList.remove("low", "critical");
-        if (this.hp <= 30) bar.classList.add("critical");
-        else if (this.hp <= 60) bar.classList.add("low");
+    takeDamage(amount) {
+        this.hp = Math.max(0, this.hp - amount);
+        this.updateUI();
     }
 };
 
 
-// ===== ����� ����ֲ� ����� =====
+// ===== ФУНКЦИЯ ЛОГА БОЯ =====
+function addLog(attacker, defender, damage, leftHP) {
+    // выбираем случайную фразу из массива logs (из файла logs.js)
+    const msg = logs[Math.floor(Math.random() * logs.length)]
+        .replace("[ПЕРСОНАЖ №1]", attacker.name)
+        .replace("[ПЕРСОНАЖ №2]", defender.name);
 
-function attack(attacker, defender, min, max) {
-    const dmg = Math.floor(Math.random() * (max - min + 1)) + min;
-    defender.takeDamage(dmg);
+    const row = document.createElement("div");
+    row.textContent = `${msg} → Урон: ${damage} | Залишилось: ${leftHP} HP`;
 
-    const counter = Math.floor(Math.random() * 10) + 3;
-    attacker.takeDamage(counter);
+    // Последнее действие — сверху
+    logsBox.prepend(row);
 }
 
 
-// ===== ����'���� ������ =====
+// ===== ЕДИНАЯ ФУНКЦИЯ АТАКИ =====
+function attack(attacker, defender, min, max) {
+    const damage = Math.floor(Math.random() * (max - min + 1)) + min;
 
-document.getElementById("btn-kick").onclick = () => {
-    attack(player1, player2, 5, 15);
-};
+    defender.takeDamage(damage);
 
-document.getElementById("btn-strong").onclick = () => {
-    attack(player1, player2, 20, 40);
-};
+    addLog(attacker, defender, damage, defender.hp);
+}
 
-player1.updateUI();
-player2.updateUI();
+
+// ===== КНОПКИ АТАК =====
+getEl("btn-kick").onclick = () => attack(character, enemy, 5, 15);
+getEl("btn-strong").onclick = () => attack(character, enemy, 20, 40);
+
+
+// ===== Стартовая отрисовка =====
+character.updateUI();
+enemy.updateUI();
