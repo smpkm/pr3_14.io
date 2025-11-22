@@ -1,40 +1,78 @@
-const player1 = { name: "Pikachu", hp: 100 };
-const player2 = { name: "Charmander", hp: 100 };
+// ===== Œ¡'™ “» œ≈–—ŒÕ¿∆≤¬ =====
 
-function updateUI() {
-    const bar1 = document.getElementById("progressbar-character");
-    const bar2 = document.getElementById("progressbar-enemy");
-    const hp1 = document.getElementById("health-character");
-    const hp2 = document.getElementById("health-enemy");
+const player1 = {
+    name: "Pikachu",
+    hp: 100,
 
-    hp1.textContent = `${player1.hp} / 100`;
-    hp2.textContent = `${player2.hp} / 100`;
+    takeDamage(dmg) {
+        this.hp = Math.max(0, this.hp - dmg);
+        this.updateUI();
+    },
 
-    bar1.style.width = player1.hp + "%";
-    bar2.style.width = player2.hp + "%";
+    updateUI() {
+        const bar = document.getElementById("progressbar-character");
+        const text = document.getElementById("health-character");
 
-    colorBar(bar1, player1.hp);
-    colorBar(bar2, player2.hp);
+        bar.style.width = this.hp + "%";
+        text.textContent = `${this.hp} / 100`;
+
+        this.updateColor(bar);
+    },
+
+    updateColor(bar) {
+        bar.classList.remove("low", "critical");
+        if (this.hp <= 30) bar.classList.add("critical");
+        else if (this.hp <= 60) bar.classList.add("low");
+    }
+};
+
+const player2 = {
+    name: "Charmander",
+    hp: 100,
+
+    takeDamage(dmg) {
+        this.hp = Math.max(0, this.hp - dmg);
+        this.updateUI();
+    },
+
+    updateUI() {
+        const bar = document.getElementById("progressbar-enemy");
+        const text = document.getElementById("health-enemy");
+
+        bar.style.width = this.hp + "%";
+        text.textContent = `${this.hp} / 100`;
+
+        this.updateColor(bar);
+    },
+
+    updateColor(bar) {
+        bar.classList.remove("low", "critical");
+        if (this.hp <= 30) bar.classList.add("critical");
+        else if (this.hp <= 60) bar.classList.add("low");
+    }
+};
+
+
+// ===== ™ƒ»Õ¿ ‘”Õ ÷≤ﬂ ¿“¿ » =====
+
+function attack(attacker, defender, min, max) {
+    const dmg = Math.floor(Math.random() * (max - min + 1)) + min;
+    defender.takeDamage(dmg);
+
+    const counter = Math.floor(Math.random() * 10) + 3;
+    attacker.takeDamage(counter);
 }
 
-function colorBar(bar, hp) {
-    bar.classList.remove("low","critical");
-    if (hp > 60) return;
-    if (hp > 30) bar.classList.add("low");
-    else bar.classList.add("critical");
-}
 
-function attack(dmgMin, dmgMax) {
-    const dmg = Math.floor(Math.random() * (dmgMax - dmgMin + 1)) + dmgMin;
-    player2.hp = Math.max(0, player2.hp - dmg);
+// ===== œ–»¬'ﬂ« ¿  ÕŒœŒ  =====
 
-    const counter = Math.floor(Math.random() * 15);
-    player1.hp = Math.max(0, player1.hp - counter);
+document.getElementById("btn-kick").onclick = () => {
+    attack(player1, player2, 5, 15);
+};
 
-    updateUI();
-}
+document.getElementById("btn-strong").onclick = () => {
+    attack(player1, player2, 20, 40);
+};
 
-document.getElementById("btn-kick").onclick = () => attack(5,15);
-document.getElementById("btn-strong").onclick = () => attack(20,40);
-
-updateUI();
+player1.updateUI();
+player2.updateUI();
