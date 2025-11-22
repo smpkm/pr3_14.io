@@ -1,11 +1,37 @@
 export class Pokemon {
-    constructor({ name, maxHp = 100, progressBarEl, healthTextEl }) {
+    constructor({
+        name,
+        hp,
+        type,
+        img,
+        attacks = [],
+        progressBarEl,
+        healthTextEl,
+        nameEl,
+        imgEl
+    }) {
         this.name = name;
-        this.maxHp = maxHp;
-        this.hp = maxHp;
+        this.type = type;
+        this.maxHp = hp;
+        this.hp = hp;
+        this.img = img;
+        this.attacks = attacks;
+
         this.progressBarEl = progressBarEl;
         this.healthTextEl = healthTextEl;
+        this.nameEl = nameEl;
+        this.imgEl = imgEl;
 
+        this.renderInitial();
+    }
+
+    renderInitial() {
+        if (this.nameEl) {
+            this.nameEl.textContent = this.name;
+        }
+        if (this.imgEl && this.img) {
+            this.imgEl.src = this.img;
+        }
         this.updateUI();
     }
 
@@ -14,11 +40,11 @@ export class Pokemon {
 
         if (this.progressBarEl) {
             this.progressBarEl.style.width = `${hpPercent}%`;
-
             this.progressBarEl.classList.remove('low', 'critical');
+
             if (hpPercent <= 20) {
                 this.progressBarEl.classList.add('critical');
-            } else if (hpPercent <= 40) {
+            } else if (hpPercent <= 60) {
                 this.progressBarEl.classList.add('low');
             }
         }

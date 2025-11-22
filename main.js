@@ -1,51 +1,29 @@
-﻿import { Pokemon } from './pokemon.js';
-import { createClickLimiter, attack } from './utils.js';
+﻿import { Game } from './game.js';
 
 const $ = (id) => document.getElementById(id);
 
-const {
-    progressbarCharacter,
-    healthCharacter,
-    progressbarEnemy,
-    healthEnemy,
-    logsBox
-} = {
-    progressbarCharacter: $('progressbar-character'),
-    healthCharacter: $('health-character'),
-    progressbarEnemy: $('progressbar-enemy'),
-    healthEnemy: $('health-enemy'),
-    logsBox: $('logs')
+const logsBox = $('logs');
+const controlEl = document.querySelector('.control');
+
+const playerDom = {
+    progress: $('progressbar-character'),
+    health: $('health-character'),
+    name: $('name-character'),
+    img: document.getElementById('img-character'),
 };
 
-const character = new Pokemon({
-    name: 'Pikachu',
-    maxHp: 100,
-    progressBarEl: progressbarCharacter,
-    healthTextEl: healthCharacter
+const enemyDom = {
+    progress: $('progressbar-enemy'),
+    health: $('health-enemy'),
+    name: $('name-enemy'),
+    img: document.getElementById('img-enemy'),
+};
+
+const game = new Game({
+    logsBox,
+    controlEl,
+    playerDom,
+    enemyDom,
 });
 
-const enemy = new Pokemon({
-    name: 'Charmander',
-    maxHp: 100,
-    progressBarEl: progressbarEnemy,
-    healthTextEl: healthEnemy
-});
-
-// КНОПКИ
-const btnKick = $('btn-kick');
-const btnStrong = $('btn-strong');
-const kickLimit = createClickLimiter(6);
-const strongLimit = createClickLimiter(6);
-
-btnKick.addEventListener('click', () => {
-    if (!kickLimit()) return;
-    attack(character, enemy, 5, 15, logsBox);
-});
-
-btnStrong.addEventListener('click', () => {
-    if (!strongLimit()) return;
-    attack(character, enemy, 20, 40, logsBox);
-});
-
-character.updateUI();
-enemy.updateUI();
+game.startGame();
